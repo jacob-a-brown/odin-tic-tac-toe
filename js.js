@@ -5,13 +5,13 @@ const gameboard = (() => {
     // - update the game board with a new piece by setting it 
     // - get the current state of the board
     
-    // [column, row]
+    // [row][column]
     const gameArray = [[EMPTY_CELL, EMPTY_CELL, EMPTY_CELL], [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL], [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL]];
 
-    const setPiece = function (column, row, letter){
+    const setPiece = function (row, column, letter){
         // set a piece on the board
         // assumes that the location is empty
-        gameArray[column][row] = letter;
+        gameArray[row][column] = letter;
     }
 
     const getBoard = function (){
@@ -52,20 +52,18 @@ function createGame(){
 
     let currentPlayer = playerX;
 
-    const isMoveLegal = function (column, row){
+    const isMoveLegal = function (row, column){
         const currentGameboardArray = gameboard.getBoard()
-        if (currentGameboardArray[column, row] === EMPTY_CELL){
-            console.log("go ahead!")
+        if (currentGameboardArray[row][column] === EMPTY_CELL){
             return true;
         } else {
-            console.log("don't go ahead!")
             return false;
         }
     }
 
-    const playPiece = function (column, row){
-        if (isMoveLegal(column, row)){
-            gameboard.setPiece(column, row, currentPlayer.getLetter())
+    const playPiece = function (row, column){
+        if (isMoveLegal(row, column)){
+            gameboard.setPiece(row, column, currentPlayer.getLetter())
             if (currentPlayer === playerX){
                 currentPlayer = playerO;
             } else {
@@ -73,7 +71,7 @@ function createGame(){
             }
             console.log(gameboard.getBoard())
         } else {
-            alert(`[${column}, ${row}] is already taken with ${gameboard.getBoard()}. Play again.`)
+            alert(`row ${row} / column ${column} is already taken with ${gameboard.getBoard()}. Play again.`)
         } 
     }
 
@@ -81,58 +79,49 @@ function createGame(){
         // returns empty string if game is not over
         // returns letter of winning play if the game is over
         const currentGameboardArray = gameboard.getBoard();
-        let winningLetter;
 
         // check columns
         for (let column = 0; column < 3; column++){
-            const previousCellLetter = currentGameboardArray[column, 0];
-            for (let row = 1; row < 3; row++){
-                const currentCellLetter = currentGameboardArray[column][row];
-                if (currentCellLetter === EMPTY_CELL || previousCellLetter === EMPTY_CELL){
-                    return EMPTY_CELL
-                } else if (currentCellLetter !== previousCellLetter){
-                    break;
-                } else if (row === 3){
-                    winningLetter = currentCellLetter;
-                    return winningLetter;
-                }
+            const columnCells = [];
+            for (let row = 0; row < 3; row++){
+                columnCells.push(currentGameboardArray[row][column])
             }
-        }
+            alert("columnCells", columnCells);
+            if (columnCells[0] === columnCells[1] && columnCells[1] === columnCells[2] && columnCells[0] !== EMPTY_CELL){
+                return columnCells[0];
+            }
 
         // check rows
         for (let row = 0; row < 3; row++){
-            const previousCellLetter = currentGameboardArray[0, row];
-            for (let column = 1; column < 3; column++){
-                const currentCellLetter = currentGameboardArray[column][row];
-                if (currentCellLetter === EMPTY_CELL || previousCellLetter === EMPTY_CELL){
-                    return EMPTY_CELL
-                } else if (currentCellLetter !== previousCellLetter){
-                    break;
-                } else if (column === 3){
-                    winningLetter = currentCellLetter;
-                    return winningLetter;
-                }
+            const rowCells = [];
+            for (let column = 0; column < 3; column++){
+                rowCells.push(currentGameboardArray[row][column])
             }
-        }
+            alert("rowCells", rowCells);
+            if (rowCells[0] === rowCells[1] && rowCells[1] === rowCells[2] && rowCells[0] !== EMPTY_CELL){
+                return rowCells[0];
+            }
 
         // check crosses
         if (gamboardArray[0][0] === currentGameboardArray[1][1] && currentGameboardArray[1][1] === currentGameboardArray[2][2] && currentGameboardArray[0][0] !== EMPTY_CELL){
-            winningLetter = currentGameboardArray[0][0];
-            return winningLetter;
+            return currentGameboardArray[1][1];
         } else if (currentGameboardArray[0][2] === currentGameboardArray[1][1] && currentGameboardArray[1][1] === currentGameboardArray[2][0] && currentGameboardArray[0][2] !== EMPTY_CELL){
-            winningLetter = currentGameboardArray[0][2];
-            return winningLetter;
+            return currentGameboardArray[1][1];
         }
 
         return EMPTY_CELL;
     }
 
     const playGame = function() {
+        alert("gameOver", gameOver())
         while(gameOver() === EMPTY_CELL){
+            const cs = gameboard.getBoard()
+            alert(`current state:\n${cs[0]}\n${cs[1]}\n${cs[2]}`)
             let column = parseInt(prompt("column? "))
             let row = parseInt(prompt("row? "))
 
-            playPiece(column, row);
+            playPiece(row, column);
+            alert("gameOver", gameOver())
         }
         console.log(gameOver(), "won the game!")
     }
@@ -145,4 +134,5 @@ function createGame(){
 
 
 const currentGame = createGame();
+alert("playing game");
 currentGame.playGame();
