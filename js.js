@@ -1,6 +1,6 @@
 const EMPTY_CELL = " ";
 const PLAYER_X_LETTER = "X";
-const PLAYER_Y_LETTER = "Y";
+const PLAYER_Y_LETTER = "O";
 const TIED_GAME = "tied game";
 
 // there can only be one gameboard so make it an IIFE
@@ -54,14 +54,23 @@ game = (() => {
     const playerO = createPlayer(PLAYER_Y_LETTER);
     let currentPlayer = playerX;
 
-    let gameState = "";
+    let gameMsg = "";
+    let gameOver = false;
 
-    const getGameState = function () {
-        return gameState;
+    const getGameMsg = function () {
+        return gameMsg;
     }
 
-    const setGameState = function(msg) {
-        gameState = msg;
+    const setGameMsg = function(msg) {
+        gameMsg = msg;
+    }
+
+    const getGameOver = function() {
+        return gameOver;
+    }
+
+    const setGameOver = function(gameOverBool) {
+        gameOver = gameOverBool;
     }
 
     const getCurrentPlayer = function (){
@@ -86,11 +95,22 @@ game = (() => {
     }
 
     const playTurn = function (row, column){
-        if (isMoveLegal(row, column)){
+        if (getGameOver() === true) {
+            setGameMsg("The game is over. Refresh to play again.")
+        } else if (isMoveLegal(row, column)){
             gameboard.setPiece(row, column, currentPlayer.getLetter())
-            switchCurrentPlayer();
+            if (winningLetter() === EMPTY_CELL){
+                    setGameMsg("Game on!");
+                    switchCurrentPlayer();
+                } else if (winningLetter() === TIED_GAME){
+                    setGameMsg("The game ends in a tie.")
+                    setGameOver(true);
+                } else {
+                    setGameMsg(`The winner is Player ${game.getCurrentPlayer().getLetter()}!`)
+                    setGameOver(true);
+                }
         } else {
-            alert(`row ${row} / column ${column} is already taken with ${gameboard.getBoard()}. Play again.`)
+            setGameMsg("Cell is already taken. Try again.")
         } 
     }
 
@@ -142,63 +162,56 @@ game = (() => {
         return TIED_GAME;
     }
 
-    const playGame = function() {
-        while(winningLetter() === EMPTY_CELL){
-            currentPlayer = getCurrentPlayer()
-            setGameState("The game is ongoing.")
-            display.renderGame();
-
-            let row = 1;
-            let column = 0;
-            playTurn(row, column);
-            display.renderGame();
-            break;
-        }
-
-        if (winningLetter() == TIED_GAME){
-            setGameState("The game ends in a tie.");
-            display.renderGame();
-        } else {
-            const winnerLetter = winningLetter()
-            setGameState(`Player ${winnerLetter} won the game!`);
-            display.renderGame();
-        }
-        
-    }
-
     return {
-        playGame,
         getCurrentPlayer,
-        getGameState
+        getGameMsg,
+        setGameMsg,
+        winningLetter,
+        playTurn
     }
 })();
 
 const display = (() => {
 
-    const renderGame = function(){
-        const currentGameboardArray = gameboard.getBoard()
-        const currentPlayer = game.getCurrentPlayer()
-        const currentGameState = game.getGameState();
-
-        const playerTurnMsg = document.querySelector("#player-turn-msg");
-        playerTurnMsg.TextContent = `It is player ${currentPlayer.getLetter()}'s turn`;
-
+    const playFromDisplay = function () {
         for (let row = 0; row < 3; row++){
-            for (let column = 0; column < 3; column ++){
-                const currentCell = document.querySelector(`#r${row}c${column}`);
-                const h2 = document.createElement("h2");
-                h2.textContent = currentGameboardArray[row][column];
-                currentCell.appendChild(h2);
+            for (let column = 0; column < 3; column++){
+                const cellButton = document.querySelector(`#r${row}c${column}`);
+                cellButton.addEventListener("click", (event) => {
+                    const rowColumnSplit = event.target.id.split("");
+                    const row = rowColumnSplit[1];
+                    const column = rowColumnSplit[3];
+                    game.playTurn(row, column);
+                    display.renderGame();
+                })
             }
         }
 
-        const gameStateMsg = document.querySelector("#game-state-msg");
-        gameStateMsg.textContent = currentGameState;
+    }
+
+    const renderGame = function(){
+        const currentGameboardArray = gameboard.getBoard()
+        const currentPlayer = game.getCurrentPlayer()
+        const currentGameMsg = game.getGameMsg();
+
+        const playerTurnMsg = document.querySelector("#player-turn-msg");
+        playerTurnMsg.textContent = `It is player ${currentPlayer.getLetter()}'s turn`;
+
+        for (let row = 0; row < 3; row++){
+            for (let column = 0; column < 3; column ++){
+                const currentCellText = document.querySelector(`#r${row}c${column}-text`);
+                currentCellText.textContent = currentGameboardArray[row][column];
+            }
+        }
+
+        const gameMsg = document.querySelector("#game-state-msg");
+        gameMsg.textContent = currentGameMsg;
     }
 
     return {
-        renderGame
+        renderGame,
+        playFromDisplay
     }
 })();
 
-game.playGame();
+display.playFromDisplay();

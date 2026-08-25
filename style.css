@@ -19,6 +19,15 @@
     align-items: center;
 }
 
+.cell:hover {
+    border: 1px solid blue;
+}
+
+.cell:active {
+    border: 1px solid red;
+    background-color: rgb(217, 217, 217);
+}
+
 #player-turn-msg {
     grid-row: 1 / 2;
     grid-column: 1 / -1;
@@ -36,53 +45,44 @@
 #r0c0 {
     grid-row: 2 / 3;
     grid-column: 2 / 3;
-    background-color: rgb(209, 209, 209);
 }
 
 #r0c1 {
     grid-row: 2 / 3;
     grid-column: 3 / 4;
-    background-color: rgb(180, 180, 180)
 }
 
 #r0c2 {
     grid-row: 2 / 3;
     grid-column: 4 / 5;
-    background-color: rgb(112, 112, 112);
 }
 
 #r1c0 {
     grid-row: 3 / 4;
     grid-column: 2 / 3;
-    background-color: rgb(0, 213, 0);
 }
 
 #r1c1 {
     grid-row: 3 / 4;
     grid-column: 3 / 4;
-    background-color: rgb(1, 153, 1);
 }
 
 #r1c2 {
     grid-row: 3 / 4;
     grid-column: 4 / 5;
-    background-color: rgb(0, 113, 0);
 }
 
 #r2c0 {
     grid-row: 4 / 5;
     grid-column: 2 / 3;
-    background-color:  rgb(149, 149, 250);
 }
 
 #r2c1 {
     grid-row: 4 / 5;
     grid-column: 3 / 4;
-    background-color:  rgb(111, 111, 255);
 }
 
 #r2c2 {
     grid-row: 4 / 5;
     grid-column: 4 / 5;
-    background-color:  rgb(70, 70, 252);
 }
