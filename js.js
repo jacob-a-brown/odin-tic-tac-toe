@@ -41,7 +41,7 @@ function createPlayer(letter) {
     }
 }
 
-function createGame(){
+game = (() => {
     // factory function to creates a game
     // - determines if the game is won
     //   - if the game is not won moves on to the next player
@@ -52,8 +52,17 @@ function createGame(){
 
     const playerX = createPlayer(PLAYER_X_LETTER);
     const playerO = createPlayer(PLAYER_Y_LETTER);
-
     let currentPlayer = playerX;
+
+    let gameState = "";
+
+    const getGameState = function () {
+        return gameState;
+    }
+
+    const setGameState = function(msg) {
+        gameState = msg;
+    }
 
     const getCurrentPlayer = function (){
         return currentPlayer;
@@ -76,7 +85,7 @@ function createGame(){
         }
     }
 
-    const playPiece = function (row, column){
+    const playTurn = function (row, column){
         if (isMoveLegal(row, column)){
             gameboard.setPiece(row, column, currentPlayer.getLetter())
             switchCurrentPlayer();
@@ -135,17 +144,24 @@ function createGame(){
 
     const playGame = function() {
         while(winningLetter() === EMPTY_CELL){
-            // const cs = gameboard.getBoard()
-            // alert(`current state:\n${cs[0]}\n${cs[1]}\n${cs[2]}`)
-            let column = parseInt(prompt("column? "))
-            let row = parseInt(prompt("row? "))
+            currentPlayer = getCurrentPlayer()
+            setGameState("The game is ongoing.")
+            display.renderGame();
 
-            playPiece(row, column);
+            let row = 1;
+            let column = 0;
+            playTurn(row, column);
+            display.renderGame();
+            break;
         }
+
         if (winningLetter() == TIED_GAME){
-            console.log(TIED_GAME)
+            setGameState("The game ends in a tie.");
+            display.renderGame();
         } else {
-            console.log(winningLetter(), "won the game!")
+            const winnerLetter = winningLetter()
+            setGameState(`Player ${winnerLetter} won the game!`);
+            display.renderGame();
         }
         
     }
@@ -153,35 +169,36 @@ function createGame(){
     return {
         playGame,
         getCurrentPlayer,
-        switchCurrentPlayer
+        getGameState
     }
-    
-}
+})();
 
-function displayLogic(){
+const display = (() => {
 
-    const renderGameState = function(){
+    const renderGame = function(){
         const currentGameboardArray = gameboard.getBoard()
+        const currentPlayer = game.getCurrentPlayer()
+        const currentGameState = game.getGameState();
+
+        const playerTurnMsg = document.querySelector("#player-turn-msg");
+        playerTurnMsg.TextContent = `It is player ${currentPlayer.getLetter()}'s turn`;
 
         for (let row = 0; row < 3; row++){
             for (let column = 0; column < 3; column ++){
                 const currentCell = document.querySelector(`#r${row}c${column}`);
-                console.log(`#r${row}c${column}`);
-                console.log(currentCell);
                 const h2 = document.createElement("h2");
-                h2.textContent = "X";
+                h2.textContent = currentGameboardArray[row][column];
                 currentCell.appendChild(h2);
             }
         }
+
+        const gameStateMsg = document.querySelector("#game-state-msg");
+        gameStateMsg.textContent = currentGameState;
     }
 
     return {
-        renderGameState
+        renderGame
     }
-}
+})();
 
-// const currentGame = createGame();
-// currentGame.playGame();
-
-const currentDisplayLogic = displayLogic();
-currentDisplayLogic.renderGameState();
+game.playGame();
