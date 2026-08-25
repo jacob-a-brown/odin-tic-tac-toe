@@ -5,10 +5,10 @@
 }
 
 .container {
-    height: 500px;
-    width: 500px;
+    height: 700px;
+    width: 600px;
     display: grid;
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: repeat(6, 1fr);
     grid-template-columns: repeat(5, 1fr);
 }
 
@@ -36,10 +36,19 @@
 }
 
 #game-state-msg {
-    grid-row: -2 / -1 ;
+    grid-row: -3 / -2 ;
     grid-column: 1 / -1;
     justify-self: center;
     align-self: center;
+}
+
+#restart {
+    grid-row: -2 / -1;
+    grid-column: 3 / 4;
+    width: 70%;
+    height: 40%;
+    align-self: center;
+    justify-self: center;
 }
 
 #r0c0 {

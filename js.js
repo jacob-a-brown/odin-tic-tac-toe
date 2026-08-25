@@ -96,17 +96,17 @@ game = (() => {
 
     const playTurn = function (row, column){
         if (getGameOver() === true) {
-            setGameMsg("The game is over. Refresh to play again.")
+            setGameMsg("The game is over. Restart to play again.")
         } else if (isMoveLegal(row, column)){
             gameboard.setPiece(row, column, currentPlayer.getLetter())
             if (winningLetter() === EMPTY_CELL){
                     setGameMsg("Game on!");
                     switchCurrentPlayer();
                 } else if (winningLetter() === TIED_GAME){
-                    setGameMsg("The game ends in a tie.")
+                    setGameMsg("The game ends in a tie. Restart to play again.")
                     setGameOver(true);
                 } else {
-                    setGameMsg(`The winner is Player ${game.getCurrentPlayer().getLetter()}!`)
+                    setGameMsg(`The winner is Player ${game.getCurrentPlayer().getLetter()}! Restart to play again.`)
                     setGameOver(true);
                 }
         } else {
@@ -162,12 +162,25 @@ game = (() => {
         return TIED_GAME;
     }
 
+    const resetGame = function () {
+        currentPlayer = playerX;
+        setGameOver(false);
+        setGameMsg("Game on!")
+        for (row = 0; row < 3; row++){
+            for (column = 0; column < 3; column ++){
+                gameboard.setPiece(row, column, EMPTY_CELL);
+            }
+        }
+        display.renderGame();
+    }
+
     return {
         getCurrentPlayer,
         getGameMsg,
         setGameMsg,
         winningLetter,
-        playTurn
+        playTurn,
+        resetGame
     }
 })();
 
@@ -186,6 +199,11 @@ const display = (() => {
                 })
             }
         }
+
+        const restartButton = document.querySelector("#restart");
+        restartButton.addEventListener("click", (event) => {
+            game.resetGame();
+        })
 
     }
 
