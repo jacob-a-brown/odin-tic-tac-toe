@@ -69,17 +69,15 @@ function createGame(){
             } else {
                 currentPlayer = playerX;
             }
-            console.log(gameboard.getBoard())
         } else {
             alert(`row ${row} / column ${column} is already taken with ${gameboard.getBoard()}. Play again.`)
         } 
     }
 
-    const gameOver = function (){
+    const winngLetter = function (){
         // returns empty string if game is not over
         // returns letter of winning play if the game is over
         const currentGameboardArray = gameboard.getBoard();
-        alert(`currentGameBoardArray\n${currentGameboardArray[0]}\n${currentGameboardArray[1]}\n${currentGameboardArray[2]}`);
 
         // check columns
         for (let column = 0; column < 3; column++){
@@ -98,7 +96,6 @@ function createGame(){
             for (let column = 0; column < 3; column++){
                 rowCells.push(currentGameboardArray[row][column])
             }
-            alert("rowCells", rowCells);
             if (rowCells[0] === rowCells[1] && rowCells[1] === rowCells[2] && rowCells[0] !== EMPTY_CELL){
                 return rowCells[0];
             }
@@ -115,17 +112,15 @@ function createGame(){
     }
 
     const playGame = function() {
-        alert("gameOver", gameOver())
-        while(gameOver() === EMPTY_CELL){
+        while(winngLetter() === EMPTY_CELL){
             // const cs = gameboard.getBoard()
             // alert(`current state:\n${cs[0]}\n${cs[1]}\n${cs[2]}`)
             let column = parseInt(prompt("column? "))
             let row = parseInt(prompt("row? "))
 
             playPiece(row, column);
-            alert("gameOver", gameOver())
         }
-        console.log(gameOver(), "won the game!")
+        console.log(winngLetter(), "won the game!")
     }
 
     return {
@@ -134,7 +129,5 @@ function createGame(){
     
 }
 
-console.log("starting game");
 const currentGame = createGame();
-alert("playing game");
 currentGame.playGame();
