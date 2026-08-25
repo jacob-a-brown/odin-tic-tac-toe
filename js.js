@@ -85,7 +85,7 @@ function createGame(){
         } 
     }
 
-    const winngLetter = function (){
+    const winningLetter = function (){
         // returns empty string if game is not over
         // returns letter of winning play if the game is over
         const currentGameboardArray = gameboard.getBoard();
@@ -134,7 +134,7 @@ function createGame(){
     }
 
     const playGame = function() {
-        while(winngLetter() === EMPTY_CELL){
+        while(winningLetter() === EMPTY_CELL){
             // const cs = gameboard.getBoard()
             // alert(`current state:\n${cs[0]}\n${cs[1]}\n${cs[2]}`)
             let column = parseInt(prompt("column? "))
@@ -145,7 +145,7 @@ function createGame(){
         if (winningLetter() == TIED_GAME){
             console.log(TIED_GAME)
         } else {
-            console.log(winngLetter(), "won the game!")
+            console.log(winningLetter(), "won the game!")
         }
         
     }
@@ -158,5 +158,30 @@ function createGame(){
     
 }
 
+function displayLogic(){
+
+    const renderGameState = function(){
+        const currentGameboardArray = gameboard.getBoard()
+
+        for (let row = 0; row < 3; row++){
+            for (let column = 0; column < 3; column ++){
+                const currentCell = document.querySelector(`#r${row}c${column}`);
+                console.log(`#r${row}c${column}`);
+                console.log(currentCell);
+                const h2 = document.createElement("h2");
+                h2.textContent = "X";
+                currentCell.appendChild(h2);
+            }
+        }
+    }
+
+    return {
+        renderGameState
+    }
+}
+
 // const currentGame = createGame();
 // currentGame.playGame();
+
+const currentDisplayLogic = displayLogic();
+currentDisplayLogic.renderGameState();
