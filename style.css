@@ -1,0 +1,85 @@
+*, body {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.container {
+    height: 500px;
+    width: 500px;
+    display: grid;
+    grid-template-rows: repeat(5, 1fr);
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.cell {
+    border: 1px solid black;
+}
+
+#player-turn-msg {
+    grid-row: 1 / 2;
+    grid-column: 1 / -1;
+    justify-self: center;
+    align-self: center;
+}
+
+#game-state-msg {
+    grid-row: -2 / -1 ;
+    grid-column: 1 / -1;
+    justify-self: center;
+    align-self: center;
+}
+
+#r0c0 {
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
+    background-color: rgb(209, 209, 209);
+}
+
+#r0c1 {
+    grid-row: 2 / 3;
+    grid-column: 3 / 4;
+    background-color: rgb(180, 180, 180)
+}
+
+#r0c2 {
+    grid-row: 2 / 3;
+    grid-column: 4 / 5;
+    background-color: rgb(112, 112, 112);
+}
+
+#r1c0 {
+    grid-row: 3 / 4;
+    grid-column: 2 / 3;
+    background-color: rgb(0, 213, 0);
+}
+
+#r1c1 {
+    grid-row: 3 / 4;
+    grid-column: 3 / 4;
+    background-color: rgb(1, 153, 1);
+}
+
+#r1c2 {
+    grid-row: 3 / 4;
+    grid-column: 4 / 5;
+    background-color: rgb(0, 113, 0);
+}
+
+#r2c0 {
+    grid-row: 4 / 5;
+    grid-column: 2 / 3;
+    background-color:  rgb(149, 149, 250);
+}
+
+#r2c1 {
+    grid-row: 4 / 5;
+    grid-column: 3 / 4;
+    background-color:  rgb(111, 111, 255);
+}
+
+#r2c2 {
+    grid-row: 4 / 5;
+    grid-column: 4 / 5;
+    background-color:  rgb(70, 70, 252);
+}

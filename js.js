@@ -158,5 +158,5 @@ function createGame(){
     
 }
 
-const currentGame = createGame();
-currentGame.playGame();
+// const currentGame = createGame();
+// currentGame.playGame();
