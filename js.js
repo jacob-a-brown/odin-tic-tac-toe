@@ -79,6 +79,7 @@ function createGame(){
         // returns empty string if game is not over
         // returns letter of winning play if the game is over
         const currentGameboardArray = gameboard.getBoard();
+        alert(`currentGameBoardArray\n${currentGameboardArray[0]}\n${currentGameboardArray[1]}\n${currentGameboardArray[2]}`);
 
         // check columns
         for (let column = 0; column < 3; column++){
@@ -86,10 +87,10 @@ function createGame(){
             for (let row = 0; row < 3; row++){
                 columnCells.push(currentGameboardArray[row][column])
             }
-            alert("columnCells", columnCells);
             if (columnCells[0] === columnCells[1] && columnCells[1] === columnCells[2] && columnCells[0] !== EMPTY_CELL){
                 return columnCells[0];
             }
+        }
 
         // check rows
         for (let row = 0; row < 3; row++){
@@ -101,9 +102,10 @@ function createGame(){
             if (rowCells[0] === rowCells[1] && rowCells[1] === rowCells[2] && rowCells[0] !== EMPTY_CELL){
                 return rowCells[0];
             }
+        }
 
         // check crosses
-        if (gamboardArray[0][0] === currentGameboardArray[1][1] && currentGameboardArray[1][1] === currentGameboardArray[2][2] && currentGameboardArray[0][0] !== EMPTY_CELL){
+        if (currentGameboardArray[0][0] === currentGameboardArray[1][1] && currentGameboardArray[1][1] === currentGameboardArray[2][2] && currentGameboardArray[0][0] !== EMPTY_CELL){
             return currentGameboardArray[1][1];
         } else if (currentGameboardArray[0][2] === currentGameboardArray[1][1] && currentGameboardArray[1][1] === currentGameboardArray[2][0] && currentGameboardArray[0][2] !== EMPTY_CELL){
             return currentGameboardArray[1][1];
@@ -115,8 +117,8 @@ function createGame(){
     const playGame = function() {
         alert("gameOver", gameOver())
         while(gameOver() === EMPTY_CELL){
-            const cs = gameboard.getBoard()
-            alert(`current state:\n${cs[0]}\n${cs[1]}\n${cs[2]}`)
+            // const cs = gameboard.getBoard()
+            // alert(`current state:\n${cs[0]}\n${cs[1]}\n${cs[2]}`)
             let column = parseInt(prompt("column? "))
             let row = parseInt(prompt("row? "))
 
@@ -132,7 +134,7 @@ function createGame(){
     
 }
 
-
+console.log("starting game");
 const currentGame = createGame();
 alert("playing game");
 currentGame.playGame();
