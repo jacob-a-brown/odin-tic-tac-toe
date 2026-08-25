@@ -1,4 +1,7 @@
 const EMPTY_CELL = " ";
+const PLAYER_X_LETTER = "X";
+const PLAYER_Y_LETTER = "Y";
+const TIED_GAME = "tied game";
 
 // there can only be one gameboard so make it an IIFE
 const gameboard = (() => {
@@ -47,10 +50,22 @@ function createGame(){
 
     // keep track of whose turn it is, starting with playerX;
 
-    const playerX = createPlayer("X");
-    const playerO = createPlayer("O");
+    const playerX = createPlayer(PLAYER_X_LETTER);
+    const playerO = createPlayer(PLAYER_Y_LETTER);
 
     let currentPlayer = playerX;
+
+    const getCurrentPlayer = function (){
+        return currentPlayer;
+    }
+
+    const switchCurrentPlayer = function () {
+        if (currentPlayer == playerX){
+            currentPlayer = playerO;
+        } else {
+            currentPlayer = playerX;
+        }
+    }
 
     const isMoveLegal = function (row, column){
         const currentGameboardArray = gameboard.getBoard()
@@ -64,11 +79,7 @@ function createGame(){
     const playPiece = function (row, column){
         if (isMoveLegal(row, column)){
             gameboard.setPiece(row, column, currentPlayer.getLetter())
-            if (currentPlayer === playerX){
-                currentPlayer = playerO;
-            } else {
-                currentPlayer = playerX;
-            }
+            switchCurrentPlayer();
         } else {
             alert(`row ${row} / column ${column} is already taken with ${gameboard.getBoard()}. Play again.`)
         } 
@@ -108,7 +119,18 @@ function createGame(){
             return currentGameboardArray[1][1];
         }
 
-        return EMPTY_CELL;
+        // check for tied game
+        let tiedGame = false;
+        for (let row = 0; row < 3; row++){
+            for (let column = 0; column < 3; column++){
+                // if there's an empty cell return empty cell string to indicate the game is not over
+                if (currentGameboardArray[row][column] === EMPTY_CELL){
+                    return EMPTY_CELL
+                }
+            }
+        }
+
+        return TIED_GAME;
     }
 
     const playGame = function() {
@@ -120,11 +142,18 @@ function createGame(){
 
             playPiece(row, column);
         }
-        console.log(winngLetter(), "won the game!")
+        if (winningLetter() == TIED_GAME){
+            console.log(TIED_GAME)
+        } else {
+            console.log(winngLetter(), "won the game!")
+        }
+        
     }
 
     return {
-        playGame
+        playGame,
+        getCurrentPlayer,
+        switchCurrentPlayer
     }
     
 }
